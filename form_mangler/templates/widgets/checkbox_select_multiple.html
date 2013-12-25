@@ -1,0 +1,7 @@
+{% load stringify %}
+{% for c in bound_field.field.choices.queryset %}
+    <label>
+        <input type="checkbox" name="{{ bound_field.name }}" value="{{ c.pk }}" {% if c.pk|stringify in bound_field.value or c.pk in bound_field.value %}checked{% endif %}>
+        {{ c }}
+    </label>
+{% endfor %}

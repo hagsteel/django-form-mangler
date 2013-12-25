@@ -1,0 +1,6 @@
+{% load stringify %}<select name="{{ bound_field.name }}" {% for a in attributes %}{{ a.key }}="{{ a.value }}"{% endfor %}>
+<option>{{ field.empty_label }}</option>
+{% for c in bound_field.field.choices.queryset %}
+<option value="{{ c.pk }}" {% if c.pk|stringify == value %}selected{% endif %}>{{ c }}</option>
+{% endfor %}
+</select>
