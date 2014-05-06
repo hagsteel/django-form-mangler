@@ -13,6 +13,8 @@ def get_widget_template_name(field):
         return 'widgets/checkbox_select_multiple.html'
     elif isinstance(field.widget, widgets.Select):
         return 'widgets/select.html'
+    elif isinstance(field.widget, widgets.CheckboxInput):
+        return 'widgets/checkbox.html'
     else:
         return 'widgets/default.html'
 

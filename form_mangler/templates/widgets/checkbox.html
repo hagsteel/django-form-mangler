@@ -1,0 +1,2 @@
+{% load stringify %}
+<input name="{{ bound_field.name }}" value="{{ bound_field.value|default:"" }}" type="checkbox" {% for a in attributes %}{{ a.key }}="{{ a.value }}"{% endfor %}>
