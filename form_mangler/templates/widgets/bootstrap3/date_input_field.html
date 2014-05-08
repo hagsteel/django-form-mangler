@@ -1,4 +1,4 @@
-<div class="form-group{% if bound_field.errors %} has-errors{% endif %}">
+<div class="form-group{% if bound_field.errors %} has-error{% endif %}">
     {{ bound_field.label_tag }}
     <input name="{{ bound_field.name }}" value="{{ value|default:'' }}" id="{{ bound_field.id_for_label }}" type="date" {% for a in attributes %}{{ a.key }}="{{ a.value }}"{% endfor %}>
     {% if bound_field.errors %}<ul>{% for error in bound_field.errors %}
