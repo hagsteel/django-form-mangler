@@ -27,6 +27,39 @@ def get_widget_template_name(field, use_bootstrap=False):
         return '{}/default.html'.format(widget_dir)
 
 
+def add_bs3_form_control_class(attributes):
+    if 'class' in attributes:
+        if 'form-control' in attributes['class']:
+            return attributes
+        attributes['class'] = 'form-control'
+        return attributes
+    attributes['class'] = 'form-control'
+    return attributes
+
+
+def render_field(field, extra_attributes=None, use_bootstrap=False):
+    widget_template = get_template(get_widget_template_name(field.field, use_bootstrap))
+    value = field.value()
+    if isinstance(field.field.widget, widgets.PasswordInput):
+        value = ''
+    attributes = field.field.widget.attrs
+    if extra_attributes:
+        for k, v in extra_attributes.items():
+            if k == 'class' and k in attributes:
+                attributes[k] += ' {}'.format(v)
+            else:
+                attributes[k] = v
+
+    if use_bootstrap:
+        attributes = add_bs3_form_control_class(attributes)
+    return widget_template.render(Context({
+        'bound_field': field,
+        'attributes': attributes,
+        'value': value,
+    }))
+
+
+
 class MangleWidgetNode(template.Node):
     def __init__(self, field_name, extra_attributes, use_bootstrap):
         self.extra_attributes = extra_attributes
@@ -37,15 +70,7 @@ class MangleWidgetNode(template.Node):
     def render(self, context):
         bound_field = self.field.resolve(context)
         extra_attributes = dict(self.extra_attributes)
-        widget_template = get_template(get_widget_template_name(bound_field.field, self.use_bootstrap))
-        value = bound_field.value()
-        if isinstance(bound_field.field.widget, widgets.PasswordInput):
-            value = ''
-        return widget_template.render(Context({
-            'bound_field': bound_field,
-            'attributes': [{'key': a, 'value': extra_attributes[a]} for a in extra_attributes ],
-            'value': value,
-        }))
+        return render_field(bound_field, extra_attributes, self.use_bootstrap)
 
 
 @register.tag()
@@ -70,3 +95,22 @@ def mangle_widget(parser, token, use_bootstrap=False):
 @register.tag()
 def mangle_widget_bs3(parser, token):
     return mangle_widget(parser, token, use_bootstrap=True)
+
+
+class MangleFormNode(template.Node):
+    def __init__(self, form):
+        self.form = template.Variable(form)
+
+    def render(self, context):
+        form = self.form.resolve(context)
+        output = ''
+        for field in form.visible_fields():
+            output += render_field(field, use_bootstrap=True)
+        return output
+
+
+@register.tag()
+def mangle_form_bs3(parser, token):
+    contents = token.split_contents()
+    form = contents[1]
+    return MangleFormNode(form)
