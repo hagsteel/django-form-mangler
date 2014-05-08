@@ -9,6 +9,8 @@ register = template.Library()
 def get_widget_template_name(field):
     if isinstance(field.widget, widgets.TextInput):
         return 'widgets/text_input_field.html'
+    if isinstance(field.widget, widgets.Textarea):
+        return 'widgets/textarea_field.html'
     elif isinstance(field.widget, widgets.CheckboxSelectMultiple):
         return 'widgets/checkbox_select_multiple.html'
     elif isinstance(field.widget, widgets.Select):
@@ -29,7 +31,7 @@ class MangleWidgetNode(template.Node):
         bound_field = self.field.resolve(context)
         extra_attributes = dict(self.extra_attributes)
         widget_template = get_template(get_widget_template_name(bound_field.field))
-        value = str(bound_field.value())
+        value = bound_field.value()
         if isinstance(bound_field.field.widget, widgets.PasswordInput):
             value = ''
         return widget_template.render(Context({
