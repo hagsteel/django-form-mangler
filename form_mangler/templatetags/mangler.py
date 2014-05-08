@@ -29,12 +29,13 @@ class MangleWidgetNode(template.Node):
         bound_field = self.field.resolve(context)
         extra_attributes = dict(self.extra_attributes)
         widget_template = get_template(get_widget_template_name(bound_field.field))
-        # if get_widget_template_name(bound_field.field) == 'widgets/select.html':
-        #     import ipdb;ipdb.set_trace()
+        value = str(bound_field.value())
+        if isinstance(bound_field.field.widget, widgets.PasswordInput):
+            value = ''
         return widget_template.render(Context({
             'bound_field': bound_field,
             'attributes': [{'key': a, 'value': extra_attributes[a]} for a in extra_attributes ],
-            'value': str(bound_field.value()),
+            'value': value,
         }))
 
 
