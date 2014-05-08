@@ -1,1 +1,1 @@
-woops
+<input name="{{ bound_field.name }}" value="{{ value|default:'' }}" type="{{ bound_field.field.widget.input_type|default:'' }}" {% for a in attributes %}{{ a.key }}="{{ a.value }}"{% endfor %}>
