@@ -1,1 +1,1 @@
-<input name="{{ bound_field.name }}" value="{{ value|default:'' }}" type="date" {% for a in attributes %}{{ a.key }}="{{ a.value }}"{% endfor %}>
+<input name="{{ bound_field.name }}" value="{{ value|default:'' }}" id="{{ bound_field.id_for_label }}" type="date" {% for a in attributes %}{{ a.key }}="{{ a.value }}"{% endfor %}>
