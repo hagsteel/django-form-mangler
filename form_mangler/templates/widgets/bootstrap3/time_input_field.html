@@ -1,0 +1,7 @@
+<div class="form-group{% if bound_field.errors %} has-error{% endif %}">
+    {{ bound_field.label_tag }}
+    <input name="{{ bound_field.name }}" value="{{ value|default:'' }}" id="{{ bound_field.id_for_label }}" type="time" {% for k, v in attributes.items %}{{ k }}="{{ v }}"{% endfor %}>
+    {% if bound_field.errors %}<ul>{% for error in bound_field.errors %}
+        <li>{{ error }}</li>
+    {% endfor %}</ul>{% endif %}
+</div>

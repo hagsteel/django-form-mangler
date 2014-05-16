@@ -2,6 +2,7 @@ from django import template
 from django.forms import widgets
 from django.template.loader import get_template
 from django.template import Context
+from django.utils.encoding import force_text
 
 register = template.Library()
 
@@ -10,15 +11,18 @@ def get_widget_template_name(field, use_bootstrap=False):
     widget_dir = 'widgets'
     if use_bootstrap:
         widget_dir = 'widgets/bootstrap3'
-
-    if isinstance(field.widget, widgets.DateInput):
-        return '{}/date_input_field.html'.format(widget_dir)
+    # if isinstance(field.widget, widgets.DateInput):
+    #     return '{}/date_input_field.html'.format(widget_dir)
+    # if isinstance(field.widget, widgets.TimeInput):
+    #     return '{}/time_input_field.html'.format(widget_dir)
     if isinstance(field.widget, widgets.TextInput):
         return '{}/text_input_field.html'.format(widget_dir)
     if isinstance(field.widget, widgets.Textarea):
         return '{}/textarea_field.html'.format(widget_dir)
     elif isinstance(field.widget, widgets.CheckboxSelectMultiple):
         return '{}/checkbox_select_multiple.html'.format(widget_dir)
+    elif isinstance(field.widget, widgets.SelectMultiple):
+        return '{}/select_multiple.html'.format(widget_dir)
     elif isinstance(field.widget, widgets.Select):
         return '{}/select.html'.format(widget_dir)
     elif isinstance(field.widget, widgets.CheckboxInput):
@@ -39,9 +43,16 @@ def add_bs3_form_control_class(attributes):
 
 def render_field(field, extra_attributes=None, use_bootstrap=False):
     widget_template = get_template(get_widget_template_name(field.field, use_bootstrap))
+    widget = field.field.widget
     value = field.value()
-    if isinstance(field.field.widget, widgets.PasswordInput):
-        value = ''
+    if value is not None:
+        if isinstance(widget, widgets.Input):
+            value = force_text(widget._format_value(value))
+        else:
+            value = force_text(field.value())
+        if isinstance(widget, widgets.PasswordInput):
+            value = ''
+
     attributes = field.field.widget.attrs
     if extra_attributes:
         for k, v in extra_attributes.items():
@@ -50,7 +61,7 @@ def render_field(field, extra_attributes=None, use_bootstrap=False):
             else:
                 attributes[k] = v
 
-    if use_bootstrap:
+    if use_bootstrap and not isinstance(field.field.widget, widgets.CheckboxInput):
         attributes = add_bs3_form_control_class(attributes)
     return widget_template.render(Context({
         'bound_field': field,

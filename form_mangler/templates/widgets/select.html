@@ -1,6 +1,6 @@
 {% load stringify %}<select name="{{ bound_field.name }}" id="{{ bound_field.id_for_label }}" {% for k, v in attributes.items %}{{ k }}="{{ v }}"{% endfor %}>
 <option>{{ field.empty_label }}</option>
 {% for k, v in bound_field.field.choices %}
-<option value="{{ k }}" {% if k|stringify == value %}selected{% endif %}>{{ v }}</option>
+<option value="{{ k }}" {% if k == value %}selected{% endif %}>{{ v }}</option>
 {% endfor %}
 </select>

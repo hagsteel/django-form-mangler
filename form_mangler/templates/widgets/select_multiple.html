@@ -1,0 +1,6 @@
+{% load stringify %}<select multiple name="{{ bound_field.name }}" id="{{ bound_field.id_for_label }}" {% for k, v in attributes.items %}{{ k }}="{{ v }}"{% endfor %}>
+<option>{{ field.empty_label }}</option>
+{% for k, v in bound_field.field.choices %}
+<option value="{{ k }}" {% if k|stringify in value %}selected{% endif %}>{{ v }}</option>
+{% endfor %}
+</select>

@@ -1,2 +1,2 @@
 {% load stringify %}
-<input name="{{ bound_field.name }}" id="{{ bound_field.id_for_label }}" value="{{ bound_field.value|default:"" }}" type="checkbox" {% for k, v in attributes.items %}{{ k }}="{{ v }}"{% endfor %}>
+<input name="{{ bound_field.name }}" id="{{ bound_field.id_for_label }}" {% if bound_field.value %}checked {% endif %} type="checkbox" {% for k, v in attributes.items %}{{ k }}="{{ v }}"{% endfor %}>
