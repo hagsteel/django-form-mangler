@@ -11,10 +11,6 @@ def get_widget_template_name(field, use_bootstrap=False):
     widget_dir = 'widgets'
     if use_bootstrap:
         widget_dir = 'widgets/bootstrap3'
-    # if isinstance(field.widget, widgets.DateInput):
-    #     return '{}/date_input_field.html'.format(widget_dir)
-    # if isinstance(field.widget, widgets.TimeInput):
-    #     return '{}/time_input_field.html'.format(widget_dir)
     if isinstance(field.widget, widgets.TextInput):
         return '{}/text_input_field.html'.format(widget_dir)
     if isinstance(field.widget, widgets.Textarea):
@@ -27,6 +23,10 @@ def get_widget_template_name(field, use_bootstrap=False):
         return '{}/select.html'.format(widget_dir)
     elif isinstance(field.widget, widgets.CheckboxInput):
         return '{}/checkbox.html'.format(widget_dir)
+    elif isinstance(field.widget, widgets.ClearableFileInput):
+        return '{}/file.html'.format(widget_dir)
+    elif isinstance(field.widget, widgets.FileInput):
+        return '{}/file.html'.format(widget_dir)
     else:
         return '{}/default.html'.format(widget_dir)
 
@@ -35,7 +35,7 @@ def add_bs3_form_control_class(attributes):
     if 'class' in attributes:
         if 'form-control' in attributes['class']:
             return attributes
-        attributes['class'] = 'form-control'
+        attributes['class'] += ' form-control'
         return attributes
     attributes['class'] = 'form-control'
     return attributes
