@@ -3,7 +3,7 @@
     <label>
         <input name="{{ bound_field.name }}" id="{{ bound_field.id_for_label }}" {% if bound_field.value %}checked {% endif %} type="checkbox" {% for k, v in attributes.items %}{{ k }}="{{ v }}"{% endfor %}>
         {{ bound_field.label }}
-    </label>
+    </label>{% if bound_field.help_text %}<p>{{ bound_field.help_text }}</p>{% endif %}
     {% if bound_field.errors %}<ul>{% for error in bound_field.errors %}
         <li>{{ error }}</li>
     {% endfor %}</ul>{% endif %}

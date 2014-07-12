@@ -5,7 +5,7 @@
     {% for k, v in bound_field.field.choices %}
     <option value="{{ k }}" {% if k|stringify == value %}selected{% endif %}>{{ v }}</option>
     {% endfor %}
-    </select>
+    </select>{% if bound_field.help_text %}<p>{{ bound_field.help_text }}</p>{% endif %}
     {% if bound_field.errors %}<ul>{% for error in bound_field.errors %}
         <li>{{ error }}</li>
     {% endfor %}</ul>{% endif %}
